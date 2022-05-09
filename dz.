@@ -1,0 +1,76 @@
+--local variables + GUI load check
+ 
+if alreadyexecuted then return print("Already loaded") end
+getgenv().alreadyexecuted = true
+print("GUI Loaded")
+local FrameMenu = Instance.new("ScreenGui")
+local Menu = Instance.new("Frame")
+local DupeButton = Instance.new("TextButton")
+local Active = false
+ 
+--GUI
+ 
+FrameMenu.Parent = game.CoreGui
+FrameMenu.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ 
+Menu.Name = "Menu"
+Menu.Parent = FrameMenu
+Menu.BackgroundColor3 = Color3.new(1/85,1/85,1/85)
+Menu.BackgroundTransparency = 1
+Menu.BorderSizePixel = 0
+Menu.Position = UDim2.new(0,685,0,497)
+Menu.Size = UDim2.new(0,119,0,52)
+Menu.BackgroundTransparency = 0.5
+Menu.Visible = true
+Menu.Draggable = true
+Menu.Active = true
+ 
+DupeButton.Name = "DupeButton"
+DupeButton.Parent = Menu
+DupeButton.BackgroundColor3 = Color3.new(2/3,12/85,12/85)
+DupeButton.Position = UDim2.new(0.11826775968075,0,0.10769228637218,0)
+DupeButton.Size = UDim2.new(0,90,0,40)
+DupeButton.BackgroundTransparency = 0.5
+DupeButton.Text = "OFF"
+DupeButton.FontSize = Enum.FontSize.Size28
+DupeButton.TextColor3 = Color3.new(1,1,1)
+DupeButton.Font = Enum.Font.SourceSans
+DupeButton.TextSize = 25
+ 
+--button + script execution
+ 
+DupeButton.MouseButton1Click:Connect(function()
+  if Active == false then
+    DupeButton.Text = "ON"
+    DupeButton.BackgroundColor3 = Color3.new(0,28/51,0)
+    Active = true
+    while Active == true do
+    wait(0.1)
+    game.ReplicatedStorage.RemoteFunctions.MoveItem:InvokeServer(7,8)
+    game.ReplicatedStorage.RemoteFunctions.MoveItem:InvokeServer(8,7)
+    end
+  else
+    DupeButton.Text = "OFF"
+    DupeButton.BackgroundColor3 = Color3.new(2/3,12/85,12/85)
+    Active = false
+  end
+end)
+ 
+function onKeyPress(inputObject, gameProcessedEvent)
+    if inputObject.KeyCode == Enum.KeyCode.BackSlash then
+        Menu.Visible = not Menu.Visible
+    end
+end
+ 
+game:GetService("UserInputService").InputBegan:connect(onKeyPress)
+ 
+local UIS = game:GetService("UserInputService")
+local connection connection = UIS.InputBegan:Connect(function(key,stuff)
+  if key.KeyCode == Enum.KeyCode.Quote and not stuff then
+     print("RIP")
+     Menu:Destroy()
+     FrameMenu:Destroy()
+     getgenv().alreadyexecuted = false
+     connection:Disconnect()
+  end
+end)
